@@ -5,8 +5,78 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Algoritmos_de_Planificación"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Algoritmos de Planificación"
+        Height="720"
+        Width="1280"
+        WindowStartupLocation="CenterScreen">
+
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Style="{StaticResource SidebarStyle}">
+            <StackPanel>
+
+                <TextBlock Text="Algoritmos de Planificación de CPU"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Margin="0,10,0,5"
+                           TextWrapping="Wrap"/>
+                <TextBlock Text="Unidad"
+                           Foreground="{StaticResource TextoClaro}"
+                           Margin="0,0,0,15"/>
+
+                <Button x:Name="BtnFCFS"
+                    Style="{StaticResource MenuButtonStyle}"
+                    Content="FCFS" Click="BtnFCFS_Click"/>
+
+                <Button x:Name="BtnPrioridad"
+                        Style="{StaticResource MenuButtonStyle}"
+                        Content="Prioridad" Click="BtnPrioridad_Click"/>
+
+                <Button x:Name="BtnSJF"
+                        Style="{StaticResource MenuButtonStyle}"
+                        Content="SJF" Click="BtnSJF_Click"/>
+
+                <Button x:Name="BtnSRTF"
+                        Style="{StaticResource MenuButtonStyle}"
+                        Content="SRTF" Click="BtnSRTF_Click"/>
+
+                <Button x:Name="BtnRoundRobin"
+                        Style="{StaticResource MenuButtonStyle}"
+                        Content="Round Robin" Click="BtnRoundRobin_Click"/>
+
+                <Button x:Name="BtnMultiLevelQueue"
+                        Style="{StaticResource MenuButtonStyle}"
+                        Content="Multi-Level Queue" Click="BtnMultiLevelQueue_Click"/>
+
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Column="1" Style="{StaticResource ContentPanelStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Background="{StaticResource ColorPrimario}"
+                        CornerRadius="6"
+                        Padding="10"
+                        Margin="0,0,0,15">
+
+                    <TextBlock Text="Demostración"
+                               FontSize="26"
+                               FontWeight="SemiBold"
+                               Foreground="White"/>
+                </Border>
+
+                <ContentControl x:Name="ContenedorContenido"
+                                Grid.Row="1"/>
+            </Grid>
+        </Border>
 
     </Grid>
 </Window>

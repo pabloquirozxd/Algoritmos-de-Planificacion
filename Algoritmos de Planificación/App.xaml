@@ -4,6 +4,88 @@
              xmlns:local="clr-namespace:Algoritmos_de_Planificación"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+
+        <!-- PALETA -->
+        <SolidColorBrush x:Key="ColorPrimario" Color="#7F73A1"/>
+        <SolidColorBrush x:Key="ColorPrimarioHover" Color="#262233"/>
+        <SolidColorBrush x:Key="ColorAlerta" Color="#8A4D67"/>
+        <SolidColorBrush x:Key="PrimarioSuave" Color="#9B8DBE"/>
+        <SolidColorBrush x:Key="FondoLavanda" Color="#E8E2F2"/>
+        <SolidColorBrush x:Key="Card" Color="White"/>
+        <SolidColorBrush x:Key="InputColor" Color="#F7F5FA"/>
+        <SolidColorBrush x:Key="BordesSuaves" Color="#DDD8E7"/>
+        <SolidColorBrush x:Key="TextoOscuro" Color="#262233"/>
+        <SolidColorBrush x:Key="TextoClaro" Color="#726C80"/>
+        <SolidColorBrush x:Key="AcentoRosa" Color="#C9A3C8"/>
+        <SolidColorBrush x:Key="AcentoVerde" Color="#E1ECE3"/>
+
+        <!-- ESTILO GENERAL -->
+        <Style TargetType="Window">
+            <Setter Property="Background" Value="{StaticResource FondoLavanda}"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="Foreground" Value="{StaticResource TextoOscuro}"/>
+        </Style>
+
+        <Style TargetType="Grid">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <!-- PANEL LATERAL -->
+        <Style x:Key="SidebarStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource PrimarioSuave}"/>
+            <Setter Property="Padding" Value="16"/>
+        </Style>
+
+        <!-- ÁREA DE CONTENIDO -->
+        <Style x:Key="ContentPanelStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource FondoLavanda}"/>
+            <Setter Property="Padding" Value="28"/>
+        </Style>
+
+        <!-- BOTONES DEL MENÚ -->
+        <Style x:Key="MenuButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource ColorPrimario}"/>
+            <Setter Property="Foreground" Value="{StaticResource FondoLavanda}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Margin" Value="0,4,0,4"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="5"
+                        Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd"
+                                Property="Background"
+                                Value="White"></Setter>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MenuButtonSelectedStyle" TargetType="Button" BasedOn="{StaticResource MenuButtonStyle}">
+            <Setter Property="Background" Value="{StaticResource ColorPrimario}"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <!-- TARJETA SUAVE -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="{StaticResource ColorPrimario}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="7"/>
+            <Setter Property="Padding" Value="20"/>
+        </Style>
+
     </Application.Resources>
 </Application>

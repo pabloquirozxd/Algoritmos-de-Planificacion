@@ -20,5 +20,35 @@ namespace Algoritmos_de_Planificación
         {
             InitializeComponent();
         }
+
+        private void BtnFCFS_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnPrioridad_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnSJF_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnSRTF_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnRoundRobin_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnMultiLevelQueue_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
