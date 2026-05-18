@@ -23,12 +23,12 @@ namespace Algoritmos_de_Planificación
 
         private void BtnFCFS_Click(object sender, RoutedEventArgs e)
         {
-
+            ContenedorContenido.Content = new FCFS.FCFS();
         }
 
         private void BtnPrioridad_Click(object sender, RoutedEventArgs e)
         {
-
+            ContenedorContenido.Content = new Prioridad.Prioridad();
         }
 
         private void BtnSJF_Click(object sender, RoutedEventArgs e)

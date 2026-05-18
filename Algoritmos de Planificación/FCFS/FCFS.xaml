@@ -1,0 +1,284 @@
+﻿<UserControl x:Class="Algoritmos_de_Planificación.FCFS.FCFS"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Algoritmos_de_Planificación.FCFS"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- ENCABEZADO -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,25">
+                <TextBlock Text="Simulador FCFS - Cafetería"
+                           FontSize="30"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource ColorPrimario}"/>
+
+                <TextBlock Text="Los pedidos se preparan en el mismo orden en que fueron registrados."
+                           FontSize="15"
+                           Foreground="{StaticResource TextoClaro}"
+                           Margin="0,8,0,0"/>
+
+                <TextBlock Text="Proceso = Pedido | Burst Time = Tiempo de preparación | Waiting Time = Tiempo en cola | Turnaround Time = Tiempo total"
+                           FontSize="13"
+                           Foreground="{StaticResource TextoClaro}"
+                           Margin="0,5,0,0"/>
+            </StackPanel>
+
+            <!-- FORMULARIO -->
+            <Grid Grid.Row="1" Margin="0,0,0,28">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="Registrar pedido"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource TextoOscuro}"
+                           Margin="0,0,0,14"/>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- CLIENTE -->
+                    <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                        <TextBlock Text="Cliente"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextoOscuro}"/>
+
+                        <TextBox x:Name="txtCliente"
+                                 Height="38"
+                                 Margin="0,6,0,0"
+                                 Padding="8"
+                                 Background="{StaticResource InputColor}"
+                                 BorderBrush="{StaticResource BordesSuaves}"/>
+                    </StackPanel>
+
+                    <!-- PEDIDO -->
+                    <StackPanel Grid.Column="1" Margin="12,0,12,0">
+                        <TextBlock Text="Pedido"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextoOscuro}"/>
+
+                        <TextBox x:Name="txtPedido"
+                                 Height="38"
+                                 Margin="0,6,0,0"
+                                 Padding="8"
+                                 Background="{StaticResource InputColor}"
+                                 BorderBrush="{StaticResource BordesSuaves}"/>
+                    </StackPanel>
+
+                    <!-- BURST TIME -->
+                    <StackPanel Grid.Column="2" Margin="12,0,0,0">
+                        <TextBlock Text="Burst Time / Tiempo de preparación"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextoOscuro}"/>
+
+                        <TextBox x:Name="txtBurstTime"
+                                 Height="38"
+                                 Margin="0,6,0,0"
+                                 Padding="8"
+                                 Background="{StaticResource InputColor}"
+                                 BorderBrush="{StaticResource BordesSuaves}"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- BOTONES -->
+                <Grid Grid.Row="2" Margin="0,18,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="btnAgregar"
+                            Grid.Column="0"
+                            Content="Agregar pedido"
+                            Height="40"
+                            Margin="0,0,8,0"
+                            Style="{StaticResource MenuButtonStyle}"
+                            Click="btnAgregar_Click"/>
+
+                    <Button x:Name="btnEjecutar"
+                            Grid.Column="1"
+                            Content="Ejecutar FCFS"
+                            Height="40"
+                            Margin="8,0,8,0"
+                            Style="{StaticResource MenuButtonStyle}"
+                            Click="btnEjecutar_Click"/>
+
+                    <Button x:Name="btnEjemplo"
+                            Grid.Column="2"
+                            Content="Cargar ejemplo"
+                            Height="40"
+                            Margin="8,0,8,0"
+                            Style="{StaticResource MenuButtonStyle}"
+                            Click="btnEjemplo_Click"/>
+
+                    <Button x:Name="btnLimpiar"
+                            Grid.Column="3"
+                            Content="Limpiar"
+                            Height="40"
+                            Margin="8,0,0,0"
+                            Style="{StaticResource MenuButtonStyle}"
+                            Click="btnLimpiar_Click"/>
+                </Grid>
+            </Grid>
+
+            <!-- TABLA -->
+            <Grid Grid.Row="2" Margin="0,0,0,25">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="360"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="Cola de pedidos"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource TextoOscuro}"
+                           Margin="0,0,0,12"/>
+
+                <DataGrid x:Name="dgPedidos"
+                          Grid.Row="1"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          IsReadOnly="True"
+                          HeadersVisibility="Column"
+                          Background="White"
+                          BorderBrush="{StaticResource BordesSuaves}"
+                          GridLinesVisibility="Horizontal"
+                          RowHeight="38"
+                          FontSize="13"
+                          HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Auto">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Proceso"
+                                            Binding="{Binding Proceso}"
+                                            Width="80"/>
+
+                        <DataGridTextColumn Header="Cliente"
+                                            Binding="{Binding Cliente}"
+                                            Width="120"/>
+
+                        <DataGridTextColumn Header="Pedido"
+                                            Binding="{Binding Pedido}"
+                                            Width="160"/>
+
+                        <DataGridTextColumn Header="Burst Time"
+                                            Binding="{Binding BurstTime}"
+                                            Width="100"/>
+
+                        <DataGridTextColumn Header="Waiting Time"
+                                            Binding="{Binding WaitingTime}"
+                                            Width="110"/>
+
+                        <DataGridTextColumn Header="Turnaround Time"
+                                            Binding="{Binding TurnaroundTime}"
+                                            Width="140"/>
+
+                        <DataGridTextColumn Header="Estado"
+                                            Binding="{Binding Estado}"
+                                            Width="130"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <!-- RESULTADOS -->
+            <Grid Grid.Row="3" Margin="0,0,0,25">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                    <TextBlock Text="Promedio Waiting Time"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource ColorPrimario}"/>
+
+                    <TextBlock x:Name="txtPromedioEspera"
+                               Text="0"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextoOscuro}"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Margin="20,0,20,0">
+                    <TextBlock Text="Promedio Turnaround Time"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource ColorPrimario}"/>
+
+                    <TextBlock x:Name="txtPromedioRetorno"
+                               Text="0"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextoOscuro}"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Margin="20,0,0,0">
+                    <TextBlock Text="Pedido actual"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource ColorPrimario}"/>
+
+                    <TextBlock x:Name="txtPedidoActual"
+                               Text="Ninguno"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextoOscuro}"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- DIAGRAMA DE GANTT -->
+            <StackPanel Grid.Row="4" Margin="0,0,0,20">
+                <TextBlock Text="Diagrama de Gantt"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource TextoOscuro}"
+                           Margin="0,0,0,10"/>
+
+                <TextBlock Text="Muestra visualmente el orden en que se preparan los pedidos."
+                           FontSize="13"
+                           Foreground="{StaticResource TextoClaro}"
+                           Margin="0,0,0,10"/>
+
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Disabled">
+                    <StackPanel x:Name="spGantt"
+                                Orientation="Horizontal"
+                                MinHeight="80"/>
+                </ScrollViewer>
+
+                <TextBlock Text="FCFS es no expropiativo: una vez que un pedido empieza a prepararse, termina antes de pasar al siguiente."
+                           Foreground="{StaticResource TextoClaro}"
+                           FontSize="13"
+                           Margin="0,18,0,0"
+                           TextAlignment="Center"/>
+            </StackPanel>
+
+        </Grid>
+    </ScrollViewer>
+</UserControl>
