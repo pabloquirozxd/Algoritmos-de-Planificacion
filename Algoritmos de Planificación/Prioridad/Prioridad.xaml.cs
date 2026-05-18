@@ -681,6 +681,7 @@ namespace Algoritmos_de_Planificación.Prioridad
             dgTickets.Items.Refresh();
         }
 
+
         private void btnLimpiar_Click(object sender, RoutedEventArgs e)
         {
             if (ejecutando)
