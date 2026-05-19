@@ -48,7 +48,7 @@ namespace Algoritmos_de_Planificación
 
         private void BtnMultiLevelQueue_Click(object sender, RoutedEventArgs e)
         {
-
+            ContenedorContenido.Content = new MultiLevelQueue.MultiLevelQueue();
         }
     }
 }
