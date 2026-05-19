@@ -171,15 +171,11 @@
                 <TextBlock Text="Diagrama de Gantt" FontSize="20" FontWeight="Bold"
                            Foreground="{StaticResource TextoOscuro}" Margin="0,0,0,10"/>
 
-                <TextBlock Text="Muestra visualmente el orden en que se ejecutan los procesos en la CPU. El ancho de cada bloque representa su duración real."
-                           FontSize="13" Foreground="{StaticResource TextoClaro}" Margin="0,0,0,10"/>
-
                 <ScrollViewer x:Name="scrollGantt" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                     <StackPanel x:Name="spGantt" Orientation="Horizontal" MinHeight="80"/>
                 </ScrollViewer>
 
-                <TextBlock Text="SJF es no expropiativo: una vez que un proceso comienza, termina antes de pasar al siguiente."
-                           Foreground="{StaticResource TextoClaro}" FontSize="13" Margin="0,18,0,0" TextAlignment="Center"/>
+                
             </StackPanel>
         </Grid>
     </ScrollViewer>
