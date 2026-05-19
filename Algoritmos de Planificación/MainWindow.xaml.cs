@@ -43,7 +43,7 @@ namespace Algoritmos_de_Planificación
 
         private void BtnRoundRobin_Click(object sender, RoutedEventArgs e)
         {
-
+            ContenedorContenido.Content = new Round_Robin.RoundRobin();
         }
 
         private void BtnMultiLevelQueue_Click(object sender, RoutedEventArgs e)
