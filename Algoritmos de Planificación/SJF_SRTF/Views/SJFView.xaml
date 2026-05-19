@@ -1,0 +1,178 @@
+﻿<UserControl x:Class="Algoritmos_de_Planificación.SJF_SRTF.Views.SJFView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="1000">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="TituloSJF" Color="#5B4D7A"/>
+        <SolidColorBrush x:Key="EjemploFondo" Color="#F5F0E6"/>
+        <SolidColorBrush x:Key="EjemploBorde" Color="#D4A574"/>
+        <SolidColorBrush x:Key="EjemploTexto" Color="#8B5A2B"/>
+        <SolidColorBrush x:Key="SimuladorFondo" Color="#E0D6F0"/>
+        <SolidColorBrush x:Key="SimuladorTexto" Color="#3D2B63"/>
+        <SolidColorBrush x:Key="TablaEncabezado" Color="#6B5B8A"/>
+        <SolidColorBrush x:Key="PromedioFondo" Color="#D1C9E6"/>
+        <SolidColorBrush x:Key="PromedioTexto" Color="#2D1B4E"/>
+        <SolidColorBrush x:Key="BotonSimular" Color="#4A3A6B"/>
+        <SolidColorBrush x:Key="BotonLimpiar" Color="#7A6A8A"/>
+        <SolidColorBrush x:Key="BotonEjemplo" Color="#8B6B9B"/>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- TÍTULO -->
+            <Border Grid.Row="0" Background="{StaticResource TituloSJF}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                <TextBlock Text="SJF (Shortest Job First) - No Apropiativo"
+                           FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"
+                           TextWrapping="Wrap"/>
+            </Border>
+
+            <!-- EJEMPLO REAL -->
+            <Border Grid.Row="1" Background="{StaticResource EjemploFondo}" CornerRadius="10" Padding="15" Margin="0,0,0,15"
+                    BorderBrush="{StaticResource EjemploBorde}" BorderThickness="2">
+                <StackPanel>
+                    <TextBlock Text="Ejemplo Real: Servidor de Impresion en Biblioteca"
+                               FontSize="16" FontWeight="Bold" Foreground="{StaticResource EjemploTexto}" Margin="0,0,0,10"/>
+
+                    <TextBlock TextWrapping="Wrap" FontSize="13" Margin="0,0,0,10">
+                        <Run FontWeight="Bold" Text="Contexto:"/>
+                        <Run Text="Los estudiantes envian trabajos de impresion. SJF imprime primero el trabajo mas corto, optimizando la experiencia de usuarios con documentos pequenos."/>
+                    </TextBlock>
+
+                    <Border Background="White" CornerRadius="8" Padding="10" BorderBrush="#DDD" BorderThickness="1" Margin="0,5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Row="0" Grid.ColumnSpan="4" Background="{StaticResource EjemploBorde}" Padding="8" CornerRadius="4">
+                                <TextBlock Text="Trabajos en Cola de Impresion" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                            </Border>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Trabajo" FontWeight="Bold" HorizontalAlignment="Center" Margin="5" Background="#F5F5F5" Padding="5"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Usuario" FontWeight="Bold" HorizontalAlignment="Center" Margin="5" Background="#F5F5F5" Padding="5"/>
+                            <TextBlock Grid.Row="1" Grid.Column="2" Text="Paginas" FontWeight="Bold" HorizontalAlignment="Center" Margin="5" Background="#F5F5F5" Padding="5"/>
+                            <TextBlock Grid.Row="1" Grid.Column="3" Text="Tiempo (min)" FontWeight="Bold" HorizontalAlignment="Center" Margin="5" Background="#F5F5F5" Padding="5"/>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="P1" HorizontalAlignment="Center" Margin="5" Padding="5"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="Ana" HorizontalAlignment="Center" Margin="5" Padding="5"/>
+                            <TextBlock Grid.Row="2" Grid.Column="2" Text="80" HorizontalAlignment="Center" Margin="5" Padding="5"/>
+                            <TextBlock Grid.Row="2" Grid.Column="3" Text="8" HorizontalAlignment="Center" Margin="5" Padding="5"/>
+
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="P2" HorizontalAlignment="Center" Margin="5" Padding="5"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="Luis" HorizontalAlignment="Center" Margin="5" Padding="5"/>
+                            <TextBlock Grid.Row="3" Grid.Column="2" Text="40" HorizontalAlignment="Center" Margin="5" Padding="5"/>
+                            <TextBlock Grid.Row="3" Grid.Column="3" Text="4" HorizontalAlignment="Center" Margin="5" Padding="5"/>
+                        </Grid>
+                    </Border>
+
+                </StackPanel>
+            </Border>
+
+            <!-- SIMULADOR - CON LABELS AGREGADAS -->
+            <Border Grid.Row="2" Background="{StaticResource SimuladorFondo}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="Simulador SJF" FontSize="16" FontWeight="Bold" Foreground="{StaticResource SimuladorTexto}" Margin="0,0,0,10"/>
+
+                    <!-- Fila de Labels -->
+                    <Grid Margin="0,5,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Nombre del Proceso" FontSize="11" Foreground="{StaticResource SimuladorTexto}" Margin="5,0"/>
+                        <TextBlock Grid.Column="1" Text="Tiempo de Llegada" FontSize="11" Foreground="{StaticResource SimuladorTexto}" Margin="5,0"/>
+                        <TextBlock Grid.Column="2" Text="Rafaga CPU" FontSize="11" Foreground="{StaticResource SimuladorTexto}" Margin="5,0"/>
+                    </Grid>
+
+                    <!-- Fila de Inputs -->
+                    <Grid Margin="0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox x:Name="txtNombre" Grid.Column="0" Margin="5" Padding="8" Text="P1"/>
+                        <TextBox x:Name="txtLlegada" Grid.Column="1" Margin="5" Padding="8" Text="0"/>
+                        <TextBox x:Name="txtRafaga" Grid.Column="2" Margin="5" Padding="8" Text="5"/>
+
+                        <Button x:Name="btnAgregar" Grid.Column="3" Content="Agregar" 
+                                Background="{StaticResource BotonSimular}" Foreground="White" FontWeight="Bold"
+                                Click="btnAgregar_Click" Margin="5" Padding="15,8" Cursor="Hand"/>
+                    </Grid>
+
+                    <Border Background="White" CornerRadius="6" Padding="5" Margin="5">
+                        <ListBox x:Name="lstProcesos" Height="100" FontFamily="Consolas" FontSize="12" BorderThickness="0"/>
+                    </Border>
+
+                    <TextBlock x:Name="txtTotalProcesos" FontSize="11" Foreground="Gray" Margin="5,5,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- TABLA DE RESULTADOS -->
+            <Border Grid.Row="3" Background="White" CornerRadius="10" Padding="15" Margin="0,0,0,15" BorderBrush="#DDD" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="Tabla de Resultados" FontSize="16" FontWeight="Bold" Foreground="{StaticResource SimuladorTexto}" Margin="0,0,0,10"/>
+
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="200">
+                        <DataGrid x:Name="dgResultados" AutoGenerateColumns="True" MinHeight="150" IsReadOnly="True"
+                                  FontSize="12" RowHeight="35" AlternatingRowBackground="#F9F9F9"/>
+                    </ScrollViewer>
+
+                    <Border Background="{StaticResource PromedioFondo}" CornerRadius="6" Padding="10" Margin="0,10,0,0">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock x:Name="txtPromRetorno" FontWeight="Bold" Margin="15,0" FontSize="13" Foreground="{StaticResource PromedioTexto}"/>
+                            <TextBlock x:Name="txtPromEspera" FontWeight="Bold" Margin="15,0" FontSize="13" Foreground="{StaticResource PromedioTexto}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- DIAGRAMA DE GANTT -->
+            <Border Grid.Row="4" Background="White" CornerRadius="10" Padding="15" BorderBrush="#DDD" BorderThickness="1" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="Diagrama de Gantt" FontSize="16" FontWeight="Bold" Foreground="{StaticResource SimuladorTexto}" Margin="0,0,0,10"/>
+
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="120">
+                        <Canvas x:Name="canvasGantt" Height="100" MinWidth="600" Background="#FAFAFA"/>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+
+            <!-- BOTONES -->
+            <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,15">
+                <Button x:Name="btnSimular" Content="Simular SJF" Background="{StaticResource BotonSimular}" Foreground="White"
+                        FontSize="14" FontWeight="Bold" Click="btnSimular_Click" Width="160" Height="40" Margin="8" Cursor="Hand"/>
+                <Button x:Name="btnLimpiar" Content="Limpiar" Background="{StaticResource BotonLimpiar}" Foreground="White"
+                        FontSize="14" FontWeight="Bold" Click="btnLimpiar_Click" Width="130" Height="40" Margin="8" Cursor="Hand"/>
+                <Button x:Name="btnEjemplo" Content="Cargar Ejemplo" Background="{StaticResource BotonEjemplo}" Foreground="White"
+                        FontSize="14" FontWeight="Bold" Click="btnEjemplo_Click" Width="150" Height="40" Margin="8" Cursor="Hand"/>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
