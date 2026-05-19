@@ -1,0 +1,149 @@
+﻿<UserControl x:Class="Algoritmos_de_Planificación.Round_Robin.RoundRobin"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Algoritmos_de_Planificación.Round_Robin"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Margin="0,0,0,25">
+                <TextBlock Text="Simulador Round Robin - Centro de Soporte"
+                           FontSize="30" FontWeight="Bold" Foreground="{StaticResource ColorPrimario}"/>
+
+                <TextBlock Text="Los tickets se atienden por turnos. Si el problema no se resuelve en el tiempo asignado (Quantum), el cliente vuelve al final de la cola."
+                           FontSize="15" Foreground="{StaticResource TextoClaro}" Margin="0,8,0,0" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Id = Ticket | Burst Time = Tiempo Total | Tiempo Restante = Lo que falta para terminar"
+                           FontSize="13" Foreground="{StaticResource TextoClaro}" Margin="0,5,0,0"/>
+            </StackPanel>
+
+            <Grid Grid.Row="1" Margin="0,0,0,28">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="Registrar Ticket" FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextoOscuro}" VerticalAlignment="Center"/>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="Quantum de Tiempo:" FontWeight="Bold" FontSize="16" Foreground="{StaticResource ColorPrimario}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                        <TextBox x:Name="txtQuantum" Width="60" Height="38" Padding="8" Background="{StaticResource InputColor}" BorderBrush="{StaticResource BordesSuaves}" TextAlignment="Center" FontWeight="Bold" FontSize="16"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                        <TextBlock Text="Cliente" FontWeight="SemiBold" Foreground="{StaticResource TextoOscuro}"/>
+                        <TextBox x:Name="txtCliente" Height="38" Margin="0,6,0,0" Padding="8" Background="{StaticResource InputColor}" BorderBrush="{StaticResource BordesSuaves}"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="12,0,12,0">
+                        <TextBlock Text="Problema (Tarea)" FontWeight="SemiBold" Foreground="{StaticResource TextoOscuro}"/>
+                        <TextBox x:Name="txtProblema" Height="38" Margin="0,6,0,0" Padding="8" Background="{StaticResource InputColor}" BorderBrush="{StaticResource BordesSuaves}"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Margin="12,0,0,0">
+                        <TextBlock Text="Burst Time (Minutos requeridos)" FontWeight="SemiBold" Foreground="{StaticResource TextoOscuro}"/>
+                        <TextBox x:Name="txtBurstTime" Height="38" Margin="0,6,0,0" Padding="8" Background="{StaticResource InputColor}" BorderBrush="{StaticResource BordesSuaves}"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="2" Margin="0,18,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="btnAgregar" Grid.Column="0" Content="Agregar Ticket" Height="40" Margin="0,0,8,0" Style="{StaticResource MenuButtonStyle}" Click="btnAgregar_Click"/>
+                    <Button x:Name="btnEjecutar" Grid.Column="1" Content="Ejecutar Round Robin" Height="40" Margin="8,0,8,0" Style="{StaticResource MenuButtonStyle}" Click="btnEjecutar_Click"/>
+                    <Button x:Name="btnEjemplo" Grid.Column="2" Content="Cargar Ejemplo" Height="40" Margin="8,0,8,0" Style="{StaticResource MenuButtonStyle}" Click="btnEjemplo_Click"/>
+                    <Button x:Name="btnLimpiar" Grid.Column="3" Content="Limpiar" Height="40" Margin="8,0,0,0" Style="{StaticResource MenuButtonStyle}" Click="btnLimpiar_Click"/>
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="2" Margin="0,0,0,25">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="360"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Cola Circular de Procesos (Ready Queue)" FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextoOscuro}" Margin="0,0,0,12"/>
+
+                <DataGrid x:Name="dgProcesos" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" HeadersVisibility="Column" Background="White" BorderBrush="{StaticResource BordesSuaves}" GridLinesVisibility="Horizontal" RowHeight="38" FontSize="13">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Ticket" Binding="{Binding IdProceso}" Width="70"/>
+                        <DataGridTextColumn Header="Cliente" Binding="{Binding Cliente}" Width="120"/>
+                        <DataGridTextColumn Header="Problema" Binding="{Binding Problema}" Width="150"/>
+                        <DataGridTextColumn Header="Burst Time" Binding="{Binding BurstTime}" Width="90"/>
+
+                        <DataGridTextColumn Header="Tiempo Restante" Binding="{Binding TiempoRestante}" Width="120" FontWeight="Bold"/>
+
+                        <DataGridTextColumn Header="Waiting Time" Binding="{Binding WaitingTime}" Width="100"/>
+                        <DataGridTextColumn Header="Turnaround" Binding="{Binding TurnaroundTime}" Width="100"/>
+
+                        <DataGridTextColumn Header="Estado" Binding="{Binding Estado}" Width="110"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <Grid Grid.Row="3" Margin="0,0,0,25">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                    <TextBlock Text="Promedio Waiting Time" FontWeight="Bold" Foreground="{StaticResource ColorPrimario}"/>
+                    <TextBlock x:Name="txtPromedioEspera" Text="0" FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextoOscuro}" Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Margin="20,0,20,0">
+                    <TextBlock Text="Promedio Turnaround Time" FontWeight="Bold" Foreground="{StaticResource ColorPrimario}"/>
+                    <TextBlock x:Name="txtPromedioRetorno" Text="0" FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextoOscuro}" Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Margin="20,0,0,0">
+                    <TextBlock Text="Proceso en CPU" FontWeight="Bold" Foreground="{StaticResource ColorPrimario}"/>
+                    <TextBlock x:Name="txtProcesoActual" Text="Ninguno" FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextoOscuro}" Margin="0,5,0,0"/>
+                </StackPanel>
+            </Grid>
+
+            <StackPanel Grid.Row="4" Margin="0,0,0,20">
+                <TextBlock Text="Diagrama de Gantt (Visualización de Conmutación de Contexto)" FontSize="20" FontWeight="Bold" Foreground="{StaticResource TextoOscuro}" Margin="0,0,0,10"/>
+                <TextBlock Text="Cada bloque representa un Quantum de tiempo en el que un hilo de la CPU atiende un ticket." FontSize="13" Foreground="{StaticResource TextoClaro}" Margin="0,0,0,10"/>
+
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <StackPanel x:Name="spGantt" Orientation="Horizontal" MinHeight="80"/>
+                </ScrollViewer>
+
+                <TextBlock Text="A diferencia de FCFS, Round Robin asegura que ningún proceso acapare la CPU (Preemptive)." Foreground="{StaticResource TextoClaro}" FontSize="13" Margin="0,18,0,0" TextAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
