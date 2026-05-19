@@ -33,12 +33,12 @@ namespace Algoritmos_de_Planificación
 
         private void BtnSJF_Click(object sender, RoutedEventArgs e)
         {
-
+            ContenedorContenido.Content = new SJF_SRTF.Views.SJFView();
         }
 
         private void BtnSRTF_Click(object sender, RoutedEventArgs e)
         {
-
+            ContenedorContenido.Content = new SJF_SRTF.Views.SRTFView();
         }
 
         private void BtnRoundRobin_Click(object sender, RoutedEventArgs e)

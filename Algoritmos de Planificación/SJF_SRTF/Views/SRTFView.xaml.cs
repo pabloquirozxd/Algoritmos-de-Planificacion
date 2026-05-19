@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using Algoritmos_de_Planificación.SJF_SRTF.Models;
 
 namespace Algoritmos_de_Planificación.SJF_SRTF.Views
@@ -12,18 +12,31 @@ namespace Algoritmos_de_Planificación.SJF_SRTF.Views
     public partial class SRTFView : UserControl
     {
         private List<Proceso> procesos = new List<Proceso>();
+        private bool ejecutando = false;
+
+        // Diccionario para colores consistentes por proceso
         private Dictionary<string, Brush> coloresPorProceso = new Dictionary<string, Brush>();
-        private Brush[] coloresBase = {
-            Brushes.Crimson, Brushes.ForestGreen, Brushes.SteelBlue,
-            Brushes.Orange, Brushes.Purple, Brushes.Teal,
-            Brushes.Goldenrod, Brushes.IndianRed, Brushes.DodgerBlue
+
+        // Paleta de colores profesionales
+        private Brush[] paletaColores = new Brush[]
+        {
+            new SolidColorBrush(Color.FromRgb(231, 76, 60)),   // Rojo
+            new SolidColorBrush(Color.FromRgb(46, 204, 113)),  // Verde
+            new SolidColorBrush(Color.FromRgb(52, 152, 219)),  // Azul
+            new SolidColorBrush(Color.FromRgb(155, 89, 182)),  // Morado
+            new SolidColorBrush(Color.FromRgb(241, 196, 15)),  // Amarillo
+            new SolidColorBrush(Color.FromRgb(230, 126, 34)),  // Naranja
+            new SolidColorBrush(Color.FromRgb(26, 188, 156)),  // Turquesa
+            new SolidColorBrush(Color.FromRgb(52, 73, 94)),    // Gris oscuro
+            new SolidColorBrush(Color.FromRgb(243, 156, 18)),  // Naranja claro
+            new SolidColorBrush(Color.FromRgb(192, 57, 43))    // Rojo oscuro
         };
 
         public SRTFView()
         {
             InitializeComponent();
             CargarEjemploPorDefecto();
-            ActualizarContador();
+            ActualizarDataGridProcesos();
         }
 
         private void CargarEjemploPorDefecto()
@@ -32,12 +45,27 @@ namespace Algoritmos_de_Planificación.SJF_SRTF.Views
             coloresPorProceso.Clear();
             procesos.Add(new Proceso("L1", 0, 25));
             procesos.Add(new Proceso("L2", 3, 5));
-            ActualizarListBox();
+            ActualizarDataGridProcesos();
+        }
+
+        private Brush ObtenerColorProceso(string nombreProceso)
+        {
+            if (!coloresPorProceso.ContainsKey(nombreProceso))
+            {
+                int indice = coloresPorProceso.Count % paletaColores.Length;
+                coloresPorProceso[nombreProceso] = paletaColores[indice];
+            }
+            return coloresPorProceso[nombreProceso];
         }
 
         private void btnAgregar_Click(object sender, RoutedEventArgs e)
         {
-            // Validación de campos vacíos
+            if (ejecutando)
+            {
+                MessageBox.Show("No puede agregar llamadas mientras se ejecuta el algoritmo.", "En ejecución", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(txtNombre.Text))
             {
                 MessageBox.Show("Ingrese un nombre para la llamada", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -46,15 +74,12 @@ namespace Algoritmos_de_Planificación.SJF_SRTF.Views
 
             string nombreProceso = txtNombre.Text.Trim();
 
-            // Validación de nombre duplicado
             if (procesos.Any(p => p.Nombre == nombreProceso))
             {
-                MessageBox.Show($"Ya existe una llamada con el nombre '{nombreProceso}'. Use un nombre diferente.",
-                                "Nombre duplicado", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Ya existe una llamada con el nombre '{nombreProceso}'. Use un nombre diferente.", "Nombre duplicado", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            // Validación con TryParse (evita que rompa con letras)
             if (!int.TryParse(txtLlegada.Text, out int llegada))
             {
                 MessageBox.Show("Ingrese un valor numérico válido para el Tiempo de Llegada", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -67,7 +92,6 @@ namespace Algoritmos_de_Planificación.SJF_SRTF.Views
                 return;
             }
 
-            // Validación de valores positivos
             if (llegada < 0)
             {
                 MessageBox.Show("El tiempo de llegada no puede ser negativo", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -83,13 +107,11 @@ namespace Algoritmos_de_Planificación.SJF_SRTF.Views
             Proceso p = new Proceso(nombreProceso, llegada, rafaga);
             procesos.Add(p);
 
-            // Resetear inputs para el próximo ingreso
             txtNombre.Text = "L" + (procesos.Count + 1);
             txtLlegada.Text = "0";
             txtRafaga.Text = "10";
 
-            ActualizarListBox();
-            ActualizarContador();
+            ActualizarDataGridProcesos();
         }
 
         private void btnSimular_Click(object sender, RoutedEventArgs e)
@@ -99,67 +121,19 @@ namespace Algoritmos_de_Planificación.SJF_SRTF.Views
                 MessageBox.Show("Agregue al menos una llamada", "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            EjecutarSRTF();
-        }
 
-        private void btnLimpiar_Click(object sender, RoutedEventArgs e)
-        {
-            procesos.Clear();
-            coloresPorProceso.Clear();
-            ActualizarListBox();
-            dgResultados.ItemsSource = null;
-            canvasGantt.Children.Clear();
-            txtPromRetorno.Text = "";
-            txtPromEspera.Text = "";
-            txtInterrupciones.Text = "";
-            txtInterrupciones.Visibility = Visibility.Collapsed;
-            ActualizarContador();
-
-            // Resetear inputs
-            txtNombre.Text = "L1";
-            txtLlegada.Text = "0";
-            txtRafaga.Text = "10";
-        }
-
-        private void btnEjemplo_Click(object sender, RoutedEventArgs e)
-        {
-            CargarEjemploPorDefecto();
-            coloresPorProceso.Clear();
-            ActualizarContador();
-
-            // Limpiar resultados anteriores
-            dgResultados.ItemsSource = null;
-            canvasGantt.Children.Clear();
-            txtPromRetorno.Text = "";
-            txtPromEspera.Text = "";
-            txtInterrupciones.Text = "";
-            txtInterrupciones.Visibility = Visibility.Collapsed;
-
-            MessageBox.Show("Ejemplo cargado: L1(0,25), L2(3,5)\n\n" +
-                          "SRTF: L1 se ejecuta de 0 a 3, luego L2 de 3 a 8, luego L1 de 8 a 28.\n" +
-                          "L1 es interrumpida UNA vez por L2.",
-                          "Ejemplo SRTF", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void ActualizarListBox()
-        {
-            lstProcesos.Items.Clear();
-            foreach (var p in procesos)
-                lstProcesos.Items.Add($"{p.Nombre,-12} | Llegada: {p.TiempoLlegada,2} | Duracion: {p.RafagaCPU,2}");
-        }
-
-        private void ActualizarContador()
-        {
-            txtTotalProcesos.Text = $"Total de llamadas: {procesos.Count}";
-        }
-
-        private Brush ObtenerColorPorProceso(string nombreProceso)
-        {
-            if (!coloresPorProceso.ContainsKey(nombreProceso))
+            if (ejecutando)
             {
-                coloresPorProceso[nombreProceso] = coloresBase[coloresPorProceso.Count % coloresBase.Length];
+                MessageBox.Show("El algoritmo ya se está ejecutando.", "En ejecución", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
-            return coloresPorProceso[nombreProceso];
+
+            ejecutando = true;
+            CambiarEstadoBotones(false);
+
+            Thread hiloSRTF = new Thread(EjecutarSRTF);
+            hiloSRTF.IsBackground = true;
+            hiloSRTF.Start();
         }
 
         private void EjecutarSRTF()
@@ -171,10 +145,17 @@ namespace Algoritmos_de_Planificación.SJF_SRTF.Views
             int tiempoActual = 0;
             int completados = 0;
             List<Proceso> resultados = new List<Proceso>();
-            List<Tuple<string, int, int>> gantt = new List<Tuple<string, int, int>>();
-
             Proceso procesoActual = null;
             int inicioActual = 0;
+
+            Dispatcher.Invoke(() =>
+            {
+                spGantt.Children.Clear();
+                txtPromRetorno.Text = "0";
+                txtPromEspera.Text = "0";
+                txtProcesoActual.Text = "Iniciando...";
+                dgResultados.ItemsSource = null;
+            });
 
             while (completados < procesosCopia.Count)
             {
@@ -182,57 +163,82 @@ namespace Algoritmos_de_Planificación.SJF_SRTF.Views
 
                 if (!disponibles.Any())
                 {
-                    // Registrar tiempo IDLE
                     int siguienteLlegada = procesosCopia.Where(p => p.RafagaRestante > 0).Min(p => p.TiempoLlegada);
                     if (tiempoActual < siguienteLlegada)
                     {
-                        gantt.Add(Tuple.Create("IDLE", tiempoActual, siguienteLlegada));
+                        int idleInicio = tiempoActual;
+                        int idleFin = siguienteLlegada;
+                        AgregarBloqueGantt("IDLE", "", idleInicio, idleFin, Brushes.LightGray);
                     }
                     tiempoActual = siguienteLlegada;
                     continue;
                 }
 
-                // Criterio de desempate: menor ráfaga restante, luego menor tiempo de llegada
-                var siguiente = disponibles
-                    .OrderBy(p => p.RafagaRestante)
-                    .ThenBy(p => p.TiempoLlegada)
-                    .First();
+                var procesoSeleccionado = disponibles.OrderBy(p => p.RafagaRestante).ThenBy(p => p.TiempoLlegada).First();
 
-                if (procesoActual != siguiente)
+                if (procesoActual != procesoSeleccionado)
                 {
                     if (procesoActual != null && inicioActual < tiempoActual)
                     {
-                        gantt.Add(Tuple.Create(procesoActual.Nombre, inicioActual, tiempoActual));
+                        int inicio = inicioActual;
+                        int fin = tiempoActual;
+                        string nombre = procesoActual.Nombre;
+                        int restante = procesoActual.RafagaRestante;
+                        Brush colorProceso = ObtenerColorProceso(nombre);
+                        AgregarBloqueGantt(nombre, $"Restante: {restante}", inicio, fin, colorProceso);
                     }
                     inicioActual = tiempoActual;
-                    procesoActual = siguiente;
+                    procesoActual = procesoSeleccionado;
 
-                    if (siguiente.TiempoInicio == -1)
-                        siguiente.TiempoInicio = tiempoActual;
+                    if (procesoSeleccionado.TiempoInicio == -1)
+                        procesoSeleccionado.TiempoInicio = tiempoActual;
                 }
 
-                siguiente.RafagaRestante--;
+                procesoSeleccionado.RafagaRestante--;
                 tiempoActual++;
 
-                if (siguiente.RafagaRestante == 0)
+                if (procesoSeleccionado.RafagaRestante == 0)
                 {
-                    siguiente.TiempoFin = tiempoActual;
-                    siguiente.TiempoRetorno = siguiente.TiempoFin - siguiente.TiempoLlegada;
-                    siguiente.TiempoEspera = siguiente.TiempoRetorno - siguiente.RafagaCPU;
-                    resultados.Add(siguiente);
+                    procesoSeleccionado.TiempoFin = tiempoActual;
+                    procesoSeleccionado.TiempoRetorno = procesoSeleccionado.TiempoFin - procesoSeleccionado.TiempoLlegada;
+                    procesoSeleccionado.TiempoEspera = procesoSeleccionado.TiempoRetorno - procesoSeleccionado.RafagaCPU;
+                    resultados.Add(procesoSeleccionado);
                     completados++;
                 }
+
+                if (procesoActual != null)
+                {
+                    int actualRestante = procesoActual.RafagaRestante;
+                    Dispatcher.Invoke(() => txtProcesoActual.Text = $"{procesoActual.Nombre} (Restan: {actualRestante} min)");
+                }
+
+                Thread.Sleep(1000);
             }
 
             if (procesoActual != null && inicioActual < tiempoActual)
             {
-                gantt.Add(Tuple.Create(procesoActual.Nombre, inicioActual, tiempoActual));
+                int inicio = inicioActual;
+                int fin = tiempoActual;
+                string nombre = procesoActual.Nombre;
+                Brush colorProceso = ObtenerColorProceso(nombre);
+                AgregarBloqueGantt(nombre, "Finalizado", inicio, fin, colorProceso);
             }
 
-            MostrarResultados(resultados, gantt);
+            double promRetorno = resultados.Average(r => r.TiempoRetorno);
+            double promEspera = resultados.Average(r => r.TiempoEspera);
+
+            Dispatcher.Invoke(() =>
+            {
+                txtPromRetorno.Text = promRetorno.ToString("0.00");
+                txtPromEspera.Text = promEspera.ToString("0.00");
+                txtProcesoActual.Text = "Todos finalizados";
+                MostrarResultados(resultados);
+                ejecutando = false;
+                CambiarEstadoBotones(true);
+            });
         }
 
-        private void MostrarResultados(List<Proceso> resultados, List<Tuple<string, int, int>> gantt)
+        private void MostrarResultados(List<Proceso> resultados)
         {
             var resultadosGrid = resultados.Select(r => new
             {
@@ -244,132 +250,126 @@ namespace Algoritmos_de_Planificación.SJF_SRTF.Views
                 Retorno = r.TiempoRetorno,
                 Espera = r.TiempoEspera
             }).ToList();
-
             dgResultados.ItemsSource = resultadosGrid;
-
-            double promRetorno = resultados.Average(r => r.TiempoRetorno);
-            double promEspera = resultados.Average(r => r.TiempoEspera);
-
-            txtPromRetorno.Text = $"Retorno Promedio: {promRetorno:F2}";
-            txtPromEspera.Text = $"Espera Promedio: {promEspera:F2}";
-
-            // Mostrar interrupciones en un TextBlock separado
-            var grupos = gantt.Where(g => g.Item1 != "IDLE").GroupBy(g => g.Item1);
-            string mensajeInterrupciones = "";
-            foreach (var grupo in grupos)
-            {
-                if (grupo.Count() > 1)
-                {
-                    mensajeInterrupciones += $"• {grupo.Key} fue interrumpido y aparece en {grupo.Count()} bloques\n";
-                }
-            }
-            if (!string.IsNullOrEmpty(mensajeInterrupciones))
-            {
-                txtInterrupciones.Text = mensajeInterrupciones;
-                txtInterrupciones.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                txtInterrupciones.Visibility = Visibility.Collapsed;
-            }
-
-            DibujarGantt(gantt);
         }
 
-        private void DibujarGantt(List<Tuple<string, int, int>> gantt)
+        private void ActualizarDataGridProcesos()
         {
-            canvasGantt.Children.Clear();
-            if (gantt.Count == 0) return;
-
-            int anchoBloque = 70, y = 20, altura = 55;
-            int maxTiempo = gantt.Max(g => g.Item3);
-            canvasGantt.Width = Math.Max(700, (maxTiempo + 2) * anchoBloque);
-
-            for (int i = 0; i < gantt.Count; i++)
+            var procesosGrid = procesos.Select(p => new
             {
-                var bloque = gantt[i];
-                string nombreProceso = bloque.Item1;
-                int inicio = bloque.Item2, fin = bloque.Item3;
+                p.Nombre,
+                Llegada = p.TiempoLlegada,
+                Duracion = p.RafagaCPU
+            }).ToList();
+            dgProcesos.ItemsSource = procesosGrid;
+        }
+
+        private void AgregarBloqueGantt(string titulo, string subtitulo, int inicio, int fin, Brush color)
+        {
+            Dispatcher.Invoke(() =>
+            {
                 int duracion = fin - inicio;
-                int x = inicio * anchoBloque + 35;
+                int anchoBloque = Math.Max(80, duracion * 20); // Ancho proporcional a la duración
 
-                Brush color;
-                if (nombreProceso == "IDLE")
+                Border bloque = new Border
                 {
-                    color = Brushes.LightGray;
-                }
-                else
-                {
-                    color = ObtenerColorPorProceso(nombreProceso);
-                }
-
-                Rectangle rect = new Rectangle
-                {
-                    Width = duracion * anchoBloque,
-                    Height = altura,
-                    Fill = color,
-                    Stroke = Brushes.Black,
-                    StrokeThickness = 1.5,
-                    RadiusX = 6,
-                    RadiusY = 6
+                    Background = color,
+                    BorderBrush = (Brush)Application.Current.Resources["ColorPrimario"],
+                    BorderThickness = new Thickness(1),
+                    CornerRadius = new CornerRadius(7),
+                    Padding = new Thickness(12),
+                    Margin = new Thickness(0, 0, 8, 0),
+                    Width = anchoBloque,
+                    MinWidth = 80
                 };
-                Canvas.SetLeft(rect, x);
-                Canvas.SetTop(rect, y);
-                canvasGantt.Children.Add(rect);
 
-                // Texto centrado
-                TextBlock txtProceso = new TextBlock
+                StackPanel contenido = new StackPanel();
+
+                TextBlock txtTitulo = new TextBlock
                 {
-                    Text = nombreProceso == "IDLE" ? "IDLE" : $"{nombreProceso}\n[{inicio}-{fin}]",
-                    FontSize = nombreProceso == "IDLE" ? 10 : 9,
+                    Text = titulo,
                     FontWeight = FontWeights.Bold,
-                    TextAlignment = TextAlignment.Center,
-                    Foreground = nombreProceso == "IDLE" ? Brushes.Black : Brushes.White
+                    Foreground = Brushes.White
                 };
 
-                txtProceso.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-                double textoAncho = txtProceso.DesiredSize.Width;
-                Canvas.SetLeft(txtProceso, x + (duracion * anchoBloque - textoAncho) / 2);
-                Canvas.SetTop(txtProceso, y + (nombreProceso == "IDLE" ? 20 : 12));
-                canvasGantt.Children.Add(txtProceso);
+                TextBlock txtSubtitulo = new TextBlock
+                {
+                    Text = subtitulo,
+                    FontSize = 11,
+                    Foreground = Brushes.White
+                };
+
+                TextBlock txtTiempo = new TextBlock
+                {
+                    Text = $"{inicio} - {fin}",
+                    FontSize = 11,
+                    FontWeight = FontWeights.SemiBold,
+                    Foreground = Brushes.White
+                };
+
+                contenido.Children.Add(txtTitulo);
+                if (!string.IsNullOrEmpty(subtitulo))
+                    contenido.Children.Add(txtSubtitulo);
+                contenido.Children.Add(txtTiempo);
+
+                bloque.Child = contenido;
+                spGantt.Children.Add(bloque);
+
+                scrollGantt.ScrollToHorizontalOffset(double.MaxValue);
+            });
+        }
+
+        private void CambiarEstadoBotones(bool habilitado)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                btnAgregar.IsEnabled = habilitado;
+                btnSimular.IsEnabled = habilitado;
+                btnEjemplo.IsEnabled = habilitado;
+                btnLimpiar.IsEnabled = habilitado;
+            });
+        }
+
+        private void btnLimpiar_Click(object sender, RoutedEventArgs e)
+        {
+            if (ejecutando)
+            {
+                MessageBox.Show("No puede limpiar mientras el algoritmo se está ejecutando.", "En ejecución", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
 
-            // Eje de tiempo
-            for (int i = 0; i <= maxTiempo + 1; i++)
-            {
-                Line line = new Line
-                {
-                    X1 = i * anchoBloque + 35,
-                    Y1 = y + altura,
-                    X2 = i * anchoBloque + 35,
-                    Y2 = y + altura + 10,
-                    Stroke = Brushes.Black,
-                    StrokeThickness = 1
-                };
-                canvasGantt.Children.Add(line);
+            procesos.Clear();
+            coloresPorProceso.Clear();
+            spGantt.Children.Clear();
+            dgProcesos.ItemsSource = null;
+            dgResultados.ItemsSource = null;
+            txtNombre.Text = "L1";
+            txtLlegada.Text = "0";
+            txtRafaga.Text = "10";
+            txtPromRetorno.Text = "0";
+            txtPromEspera.Text = "0";
+            txtProcesoActual.Text = "Ninguno";
+        }
 
-                TextBlock tiempo = new TextBlock
-                {
-                    Text = i.ToString(),
-                    FontSize = 10,
-                    Foreground = Brushes.Black,
-                    FontWeight = FontWeights.Bold
-                };
-                Canvas.SetLeft(tiempo, i * anchoBloque + 30);
-                Canvas.SetTop(tiempo, y + altura + 8);
-                canvasGantt.Children.Add(tiempo);
+        private void btnEjemplo_Click(object sender, RoutedEventArgs e)
+        {
+            if (ejecutando)
+            {
+                MessageBox.Show("No puede cargar un ejemplo mientras se ejecuta el algoritmo.", "En ejecución", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
 
-            Line baseLine = new Line
-            {
-                X1 = 35,
-                Y1 = y + altura,
-                X2 = (maxTiempo + 1) * anchoBloque + 35,
-                Y2 = y + altura,
-                Stroke = Brushes.Black,
-                StrokeThickness = 1.5
-            };
-            canvasGantt.Children.Add(baseLine);
+            procesos.Clear();
+            coloresPorProceso.Clear();
+            procesos.Add(new Proceso("L1", 0, 25));
+            procesos.Add(new Proceso("L2", 3, 5));
+            spGantt.Children.Clear();
+            dgResultados.ItemsSource = null;
+            txtPromRetorno.Text = "0";
+            txtPromEspera.Text = "0";
+            txtProcesoActual.Text = "Ninguno";
+            ActualizarDataGridProcesos();
+            MessageBox.Show("Ejemplo cargado: L1(0,25), L2(3,5)\n\nSRTF: L1 se ejecuta de 0 a 3, luego L2 de 3 a 8, luego L1 de 8 a 28.\nL1 es interrumpida UNA vez por L2.", "Ejemplo SRTF", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

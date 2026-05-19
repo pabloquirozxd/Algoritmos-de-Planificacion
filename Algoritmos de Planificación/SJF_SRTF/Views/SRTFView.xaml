@@ -4,24 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="1000">
-
-    <UserControl.Resources>
-        <SolidColorBrush x:Key="TituloSRTF" Color="#8B3A3A"/>
-        <SolidColorBrush x:Key="EjemploFondo" Color="#F5F0E6"/>
-        <SolidColorBrush x:Key="EjemploBorde" Color="#D4A574"/>
-        <SolidColorBrush x:Key="EjemploTexto" Color="#8B5A2B"/>
-        <SolidColorBrush x:Key="SimuladorFondo" Color="#E0D6F0"/>
-        <SolidColorBrush x:Key="SimuladorTexto" Color="#3D2B63"/>
-        <SolidColorBrush x:Key="PromedioFondo" Color="#D1C9E6"/>
-        <SolidColorBrush x:Key="PromedioTexto" Color="#2D1B4E"/>
-        <SolidColorBrush x:Key="BotonSimular" Color="#7A3A3A"/>
-        <SolidColorBrush x:Key="BotonLimpiar" Color="#7A6A8A"/>
-        <SolidColorBrush x:Key="BotonEjemplo" Color="#8B6B9B"/>
-    </UserControl.Resources>
+             d:DesignHeight="650" d:DesignWidth="1000">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <Grid Margin="15">
+        <Grid Margin="30">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -31,154 +17,169 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- TÍTULO - Fila 0 -->
-            <Border Grid.Row="0" Background="{StaticResource TituloSRTF}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
-                <TextBlock Text="SRTF (Shortest Remaining Time First) - Apropiativo"
-                           FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"
-                           TextWrapping="Wrap"/>
-            </Border>
+            <!-- ENCABEZADO -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,25">
+                <TextBlock Text="Simulador SRTF - Call Center"
+                           FontSize="30"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource ColorPrimario}"/>
 
-            <!-- EJEMPLO REAL - Fila 1 -->
-            <Border Grid.Row="1" Background="{StaticResource EjemploFondo}" CornerRadius="10" Padding="15" Margin="0,0,0,15"
-                    BorderBrush="{StaticResource EjemploBorde}" BorderThickness="2">
-                <StackPanel>
-                    <TextBlock Text="Call Center con Interrupciones"
-                               FontSize="16" FontWeight="Bold" Foreground="{StaticResource EjemploTexto}" Margin="0,0,0,10"/>
+                <TextBlock Text="Shortest Remaining Time First: Las llamadas más cortas se atienden primero. ¡Expropiativo!"
+                           FontSize="15"
+                           Foreground="{StaticResource TextoClaro}"
+                           Margin="0,8,0,0"/>
 
-                    <TextBlock TextWrapping="Wrap" FontSize="13" Margin="0,0,0,10">
-                        <Run Text="Un call center atiende llamadas. Si llega una llamada que se puede resolver mas rapido que la actual, SE INTERRUMPE la llamada actual para atender la mas corta."/>
-                    </TextBlock>
+                <TextBlock Text="Proceso = Llamada | Burst Time = Duración | Waiting Time = Tiempo en cola | Turnaround Time = Tiempo total"
+                           FontSize="13"
+                           Foreground="{StaticResource TextoClaro}"
+                           Margin="0,5,0,0"/>
+            </StackPanel>
 
-                    <!-- Tabla de llamadas -->
-                    <Border Background="White" CornerRadius="8" Padding="10" BorderBrush="#DDD" BorderThickness="1" Margin="0,5">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
+            <!-- FORMULARIO -->
+            <Grid Grid.Row="1" Margin="0,0,0,28">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-                            <!-- Encabezado -->
-                            <Border Grid.Row="0" Grid.ColumnSpan="4" Background="{StaticResource EjemploBorde}" Padding="8" CornerRadius="4">
-                                <TextBlock Text="Llamadas entrantes" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
-                            </Border>
+                <TextBlock Grid.Row="0"
+                           Text="Registrar llamada"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource TextoOscuro}"
+                           Margin="0,0,0,14"/>
 
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Llamada" FontWeight="Bold" HorizontalAlignment="Center" Margin="5" Background="#F5F5F5" Padding="5"/>
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Cliente" FontWeight="Bold" HorizontalAlignment="Center" Margin="5" Background="#F5F5F5" Padding="5"/>
-                            <TextBlock Grid.Row="1" Grid.Column="2" Text="Duracion (min)" FontWeight="Bold" HorizontalAlignment="Center" Margin="5" Background="#F5F5F5" Padding="5"/>
-                            <TextBlock Grid.Row="1" Grid.Column="3" Text="Llegada (min)" FontWeight="Bold" HorizontalAlignment="Center" Margin="5" Background="#F5F5F5" Padding="5"/>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                            <!-- Fila L1 -->
-                            <TextBlock Grid.Row="2" Grid.Column="0" Text="L1" HorizontalAlignment="Center" Margin="5" Padding="5" FontWeight="Bold" Foreground="#8B3A3A"/>
-                            <TextBlock Grid.Row="2" Grid.Column="1" Text="Juan" HorizontalAlignment="Center" Margin="5" Padding="5"/>
-                            <TextBlock Grid.Row="2" Grid.Column="2" Text="25" HorizontalAlignment="Center" Margin="5" Padding="5" FontWeight="Bold" Foreground="#8B3A3A"/>
-                            <TextBlock Grid.Row="2" Grid.Column="3" Text="0" HorizontalAlignment="Center" Margin="5" Padding="5"/>
+                    <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                        <TextBlock Text="Nombre de la llamada"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextoOscuro}"/>
+                        <TextBox x:Name="txtNombre" Height="38" Margin="0,6,0,0" Padding="8"
+                                 Background="{StaticResource InputColor}" BorderBrush="{StaticResource BordesSuaves}"
+                                 ToolTip="Ej: L1, L2, L3"/>
+                    </StackPanel>
 
-                            <!-- Fila L2 -->
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="L2" HorizontalAlignment="Center" Margin="5" Padding="5" FontWeight="Bold" Foreground="#2E7D32"/>
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="Maria" HorizontalAlignment="Center" Margin="5" Padding="5"/>
-                            <TextBlock Grid.Row="3" Grid.Column="2" Text="5" HorizontalAlignment="Center" Margin="5" Padding="5" FontWeight="Bold" Foreground="#2E7D32"/>
-                            <TextBlock Grid.Row="3" Grid.Column="3" Text="3" HorizontalAlignment="Center" Margin="5" Padding="5"/>
-                        </Grid>
-                    </Border>
+                    <StackPanel Grid.Column="1" Margin="12,0,12,0">
+                        <TextBlock Text="Tiempo de Llegada (min)"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextoOscuro}"/>
+                        <TextBox x:Name="txtLlegada" Height="38" Margin="0,6,0,0" Padding="8"
+                                 Background="{StaticResource InputColor}" BorderBrush="{StaticResource BordesSuaves}"
+                                 ToolTip="Tiempo en que llega la llamada (mínimo 0)"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Margin="12,0,0,0">
+                        <TextBlock Text="Duración (min)"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextoOscuro}"/>
+                        <TextBox x:Name="txtRafaga" Height="38" Margin="0,6,0,0" Padding="8"
+                                 Background="{StaticResource InputColor}" BorderBrush="{StaticResource BordesSuaves}"
+                                 ToolTip="Duración estimada en minutos (mayor a 0)"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="2" Margin="0,18,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="btnAgregar" Grid.Column="0" Content="Agregar llamada" Height="40" Margin="0,0,8,0"
+                            Style="{StaticResource MenuButtonStyle}" Click="btnAgregar_Click"/>
+
+                    <Button x:Name="btnSimular" Grid.Column="1" Content="Ejecutar SRTF" Height="40" Margin="8,0,8,0"
+                            Style="{StaticResource MenuButtonStyle}" Click="btnSimular_Click"/>
+
+                    <Button x:Name="btnEjemplo" Grid.Column="2" Content="Cargar ejemplo" Height="40" Margin="8,0,8,0"
+                            Style="{StaticResource MenuButtonStyle}" Click="btnEjemplo_Click"/>
+
+                    <Button x:Name="btnLimpiar" Grid.Column="3" Content="Limpiar" Height="40" Margin="8,0,0,0"
+                            Style="{StaticResource MenuButtonStyle}" Click="btnLimpiar_Click"/>
+                </Grid>
+            </Grid>
+
+            <!-- TABLA DE PROCESOS -->
+            <Grid Grid.Row="2" Margin="0,0,0,25">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="200"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Llamadas en cola" FontSize="22" FontWeight="Bold"
+                           Foreground="{StaticResource TextoOscuro}" Margin="0,0,0,12"/>
+
+                <DataGrid x:Name="dgProcesos" Grid.Row="1" AutoGenerateColumns="True" IsReadOnly="True"
+                          HeadersVisibility="Column" Background="White" BorderBrush="{StaticResource BordesSuaves}"
+                          GridLinesVisibility="Horizontal" RowHeight="38" FontSize="13"
+                          HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+            </Grid>
+
+            <!-- TABLA DE RESULTADOS -->
+            <Grid Grid.Row="3" Margin="0,0,0,25">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="180"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Resultados de la simulación" FontSize="22" FontWeight="Bold"
+                           Foreground="{StaticResource TextoOscuro}" Margin="0,0,0,12"/>
+
+                <DataGrid x:Name="dgResultados" Grid.Row="1" AutoGenerateColumns="True" IsReadOnly="True"
+                          HeadersVisibility="Column" Background="White" BorderBrush="{StaticResource BordesSuaves}"
+                          GridLinesVisibility="Horizontal" RowHeight="38" FontSize="13"
+                          HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+            </Grid>
+
+            <!-- RESULTADOS -->
+            <Grid Grid.Row="4" Margin="0,0,0,25">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                    <TextBlock Text="Promedio Turnaround Time" FontWeight="Bold" Foreground="{StaticResource ColorPrimario}"/>
+                    <TextBlock x:Name="txtPromRetorno" Text="0" FontSize="22" FontWeight="Bold"
+                               Foreground="{StaticResource TextoOscuro}" Margin="0,5,0,0"/>
                 </StackPanel>
-            </Border>
 
-            <!-- SIMULADOR - Fila 2 (CON LABELS AGREGADAS) -->
-            <Border Grid.Row="2" Background="{StaticResource SimuladorFondo}" CornerRadius="10" Padding="15" Margin="0,0,0,15">
-                <StackPanel>
-                    <TextBlock Text="Simulador SRTF" FontSize="16" FontWeight="Bold" Foreground="{StaticResource SimuladorTexto}" Margin="0,0,0,10"/>
-
-                    <!-- FILA DE LABELS (indicadores de qué va cada campo) -->
-                    <Grid Margin="0,5,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="1.5*"/>
-                            <ColumnDefinition Width="1.5*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Nombre de la Llamada" FontSize="11" Foreground="{StaticResource SimuladorTexto}" Margin="5,0" FontWeight="SemiBold"/>
-                        <TextBlock Grid.Column="1" Text="Tiempo de Llegada (min)" FontSize="11" Foreground="{StaticResource SimuladorTexto}" Margin="5,0" FontWeight="SemiBold"/>
-                        <TextBlock Grid.Column="2" Text="Duracion Estimada (min)" FontSize="11" Foreground="{StaticResource SimuladorTexto}" Margin="5,0" FontWeight="SemiBold"/>
-                    </Grid>
-
-                    <!-- FILA DE INPUTS -->
-                    <Grid Margin="0,5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="1.5*"/>
-                            <ColumnDefinition Width="1.5*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <TextBox x:Name="txtNombre" Grid.Column="0" Margin="5" Padding="8" Text="L1" ToolTip="Ej: L1, L2, L3"/>
-                        <TextBox x:Name="txtLlegada" Grid.Column="1" Margin="5" Padding="8" Text="0" ToolTip="Tiempo en que llega la llamada"/>
-                        <TextBox x:Name="txtRafaga" Grid.Column="2" Margin="5" Padding="8" Text="10" ToolTip="Duracion estimada en minutos"/>
-
-                        <Button x:Name="btnAgregar" Grid.Column="3" Content="Agregar" 
-                                Background="{StaticResource BotonSimular}" Foreground="White" FontWeight="Bold"
-                                Click="btnAgregar_Click" Margin="5" Padding="15,8" Cursor="Hand"/>
-                    </Grid>
-
-                    <Border Background="White" CornerRadius="6" Padding="5" Margin="5">
-                        <ListBox x:Name="lstProcesos" Height="100" FontFamily="Consolas" FontSize="12" BorderThickness="0"/>
-                    </Border>
-
-                    <TextBlock x:Name="txtTotalProcesos" FontSize="11" Foreground="Gray" Margin="5,5,0,0"/>
+                <StackPanel Grid.Column="1" Margin="20,0,20,0">
+                    <TextBlock Text="Promedio Waiting Time" FontWeight="Bold" Foreground="{StaticResource ColorPrimario}"/>
+                    <TextBlock x:Name="txtPromEspera" Text="0" FontSize="22" FontWeight="Bold"
+                               Foreground="{StaticResource TextoOscuro}" Margin="0,5,0,0"/>
                 </StackPanel>
-            </Border>
 
-            <!-- TABLA DE RESULTADOS - Fila 3 -->
-            <Border Grid.Row="3" Background="White" CornerRadius="10" Padding="15" Margin="0,0,0,15" BorderBrush="#DDD" BorderThickness="1">
-                <StackPanel>
-                    <TextBlock Text="Tabla de Resultados" FontSize="16" FontWeight="Bold" Foreground="{StaticResource SimuladorTexto}" Margin="0,0,0,10"/>
-
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                        <DataGrid x:Name="dgResultados" AutoGenerateColumns="True" MinHeight="150" IsReadOnly="True"
-                                  FontSize="12" RowHeight="35" AlternatingRowBackground="#F9F9F9"/>
-                    </ScrollViewer>
-
-                    <Border Background="{StaticResource PromedioFondo}" CornerRadius="6" Padding="10" Margin="0,10,0,0">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <TextBlock x:Name="txtPromRetorno" FontWeight="Bold" Margin="15,0" FontSize="13" Foreground="{StaticResource PromedioTexto}"/>
-                            <TextBlock x:Name="txtPromEspera" FontWeight="Bold" Margin="15,0" FontSize="13" Foreground="{StaticResource PromedioTexto}"/>
-                        </StackPanel>
-                    </Border>
-
-                    <!-- Mensaje de interrupciones -->
-                    <Border Background="#FFEBEE" CornerRadius="6" Padding="10" Margin="0,10,0,0">
-                        <TextBlock x:Name="txtInterrupciones" FontWeight="Bold" FontSize="12" 
-                                   Foreground="#8B3A3A" TextWrapping="Wrap" Visibility="Collapsed"/>
-                    </Border>
+                <StackPanel Grid.Column="2" Margin="20,0,0,0">
+                    <TextBlock Text="Llamada actual" FontWeight="Bold" Foreground="{StaticResource ColorPrimario}"/>
+                    <TextBlock x:Name="txtProcesoActual" Text="Ninguno" FontSize="22" FontWeight="Bold"
+                               Foreground="{StaticResource TextoOscuro}" Margin="0,5,0,0"/>
                 </StackPanel>
-            </Border>
+            </Grid>
 
             <!-- DIAGRAMA DE GANTT -->
-            <Border Grid.Row="4" Background="White" CornerRadius="10" Padding="15" BorderBrush="#DDD" BorderThickness="1" Margin="0,0,0,15">
-                <StackPanel>
-                    <TextBlock Text="Diagrama de Gantt" FontSize="16" FontWeight="Bold" Foreground="{StaticResource SimuladorTexto}" Margin="0,0,0,10"/>
+            <StackPanel Grid.Row="5" Margin="0,0,0,20">
+                <TextBlock Text="Diagrama de Gantt" FontSize="20" FontWeight="Bold"
+                           Foreground="{StaticResource TextoOscuro}" Margin="0,0,0,10"/>
 
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="120">
-                        <Canvas x:Name="canvasGantt" Height="100" MinWidth="600" Background="#FAFAFA"/>
-                    </ScrollViewer>
-                </StackPanel>
-            </Border>
+                <TextBlock Text="Muestra visualmente el orden en que se atienden las llamadas. ¡Se ven las interrupciones! El ancho de cada bloque representa su duración real."
+                           FontSize="13" Foreground="{StaticResource TextoClaro}" Margin="0,0,0,10"/>
 
-            <!-- BOTONES  -->
-            <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,15">
-                <Button x:Name="btnSimular" Content="Simular SRTF" Background="{StaticResource BotonSimular}" Foreground="White"
-                        FontSize="14" FontWeight="Bold" Click="btnSimular_Click" Width="160" Height="40" Margin="8" Cursor="Hand"/>
-                <Button x:Name="btnLimpiar" Content="Limpiar" Background="{StaticResource BotonLimpiar}" Foreground="White"
-                        FontSize="14" FontWeight="Bold" Click="btnLimpiar_Click" Width="130" Height="40" Margin="8" Cursor="Hand"/>
-                <Button x:Name="btnEjemplo" Content="Cargar Ejemplo" Background="{StaticResource BotonEjemplo}" Foreground="White"
-                        FontSize="14" FontWeight="Bold" Click="btnEjemplo_Click" Width="150" Height="40" Margin="8" Cursor="Hand"/>
+                <ScrollViewer x:Name="scrollGantt" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <StackPanel x:Name="spGantt" Orientation="Horizontal" MinHeight="80"/>
+                </ScrollViewer>
+
+                <TextBlock Text="SRTF es expropiativo: si llega una llamada más corta, se interrumpe la actual y se atiende la nueva."
+                           Foreground="{StaticResource TextoClaro}" FontSize="13" Margin="0,18,0,0" TextAlignment="Center"/>
             </StackPanel>
         </Grid>
     </ScrollViewer>
