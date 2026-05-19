@@ -14,22 +14,20 @@ namespace Algoritmos_de_Planificación.SJF_SRTF.Views
         private List<Proceso> procesos = new List<Proceso>();
         private bool ejecutando = false;
 
-        // Diccionario para colores consistentes por proceso
         private Dictionary<string, Brush> coloresPorProceso = new Dictionary<string, Brush>();
 
-        // Paleta de colores profesionales
         private Brush[] paletaColores = new Brush[]
         {
-            new SolidColorBrush(Color.FromRgb(231, 76, 60)),   // Rojo
-            new SolidColorBrush(Color.FromRgb(46, 204, 113)),  // Verde
-            new SolidColorBrush(Color.FromRgb(52, 152, 219)),  // Azul
-            new SolidColorBrush(Color.FromRgb(155, 89, 182)),  // Morado
-            new SolidColorBrush(Color.FromRgb(241, 196, 15)),  // Amarillo
-            new SolidColorBrush(Color.FromRgb(230, 126, 34)),  // Naranja
-            new SolidColorBrush(Color.FromRgb(26, 188, 156)),  // Turquesa
-            new SolidColorBrush(Color.FromRgb(52, 73, 94)),    // Gris oscuro
-            new SolidColorBrush(Color.FromRgb(243, 156, 18)),  // Naranja claro
-            new SolidColorBrush(Color.FromRgb(192, 57, 43))    // Rojo oscuro
+            new SolidColorBrush(Color.FromRgb(231, 76, 60)), 
+            new SolidColorBrush(Color.FromRgb(46, 204, 113)), 
+            new SolidColorBrush(Color.FromRgb(52, 152, 219)), 
+            new SolidColorBrush(Color.FromRgb(155, 89, 182)), 
+            new SolidColorBrush(Color.FromRgb(241, 196, 15)), 
+            new SolidColorBrush(Color.FromRgb(230, 126, 34)),  
+            new SolidColorBrush(Color.FromRgb(26, 188, 156)),  
+            new SolidColorBrush(Color.FromRgb(52, 73, 94)),    
+            new SolidColorBrush(Color.FromRgb(243, 156, 18)),  
+            new SolidColorBrush(Color.FromRgb(192, 57, 43))    
         };
 
         public SRTFView()
